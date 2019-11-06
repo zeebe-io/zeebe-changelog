@@ -8,9 +8,6 @@ import (
 	"log"
 )
 
-const githubOrg = "zeebe-io"
-const githubRepo = "zeebe"
-
 type GithubClient struct {
 	ctx    context.Context
 	client *github.Client
@@ -35,14 +32,14 @@ func NewClient(token string) *GithubClient {
 	}
 }
 
-func (ghc *GithubClient) AddLabel(issueId int, label string) {
+func (ghc *GithubClient) AddLabel(githubOrg string, githubRepo string, issueId int, label string) {
 	_, _, err := ghc.client.Issues.AddLabelsToIssue(ghc.ctx, githubOrg, githubRepo, issueId, []string{label})
 	if err != nil {
 		log.Fatalln(err)
 	}
 }
 
-func (ghc *GithubClient) FetchIssues(label string) (features []*GithubIssue, fixes []*GithubIssue, docs []*GithubIssue, pullRequests []*GithubIssue) {
+func (ghc *GithubClient) FetchIssues(githubOrg, githubRepo, label string) (features []*GithubIssue, fixes []*GithubIssue, docs []*GithubIssue, pullRequests []*GithubIssue) {
 	options := &github.IssueListByRepoOptions{State: "all", Labels: []string{label}}
 
 	for {
@@ -86,5 +83,6 @@ func PrintIssues(title string, issues []*GithubIssue) {
 		for _, issue := range issues {
 			fmt.Printf("* %s ([#%d](%s))\n", *issue.issue.Title, *issue.issue.Number, *issue.issue.HTMLURL)
 		}
+		fmt.Println()
 	}
 }

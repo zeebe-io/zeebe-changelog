@@ -11,17 +11,23 @@ import (
 )
 
 const (
-	appName         = "zcl"
-	gitApiTokenFlag = "token"
-	gitApiTokenEnv  = "GITHUB_API_TOKEN"
-	gitDirFlag      = "gitDir"
-	gitDirEnv       = "ZCL_GIT_DIR"
-	labelFlag       = "label"
-	labelEnv        = "ZCL_LABEL"
-	fromFlag        = "from"
-	fromEnv         = "ZCL_FROM_REV"
-	targetFlag      = "target"
-	targetEnv       = "ZCL_TARGET_REV"
+	appName           = "zcl"
+	gitApiTokenFlag   = "token"
+	gitApiTokenEnv    = "GITHUB_API_TOKEN"
+	gitDirFlag        = "gitDir"
+	gitDirEnv         = "ZCL_GIT_DIR"
+	labelFlag         = "label"
+	labelEnv          = "ZCL_LABEL"
+	fromFlag          = "from"
+	fromEnv           = "ZCL_FROM_REV"
+	targetFlag        = "target"
+	targetEnv         = "ZCL_TARGET_REV"
+	githubOrgFlag     = "org"
+	githubOrgEnv      = "ZCL_ORG"
+	githubOrgDefault  = "zeebe-io"
+	githubRepoFlag    = "repo"
+	githubRepoEnv     = "ZCL_REPO"
+	githubRepoDefault = "zeebe"
 )
 
 var (
@@ -81,6 +87,18 @@ func createApp() *cli.App {
 					EnvVar:   gitApiTokenEnv,
 					Required: true,
 				},
+				cli.StringFlag{
+					Name:   githubOrgFlag,
+					Usage:  "GitHub organization",
+					EnvVar: githubOrgEnv,
+					Value:  githubOrgDefault,
+				},
+				cli.StringFlag{
+					Name:   githubRepoFlag,
+					Usage:  "GitHub repository",
+					EnvVar: githubRepoEnv,
+					Value:  githubRepoDefault,
+				},
 			},
 			Action: addLabels,
 		},
@@ -101,6 +119,18 @@ func createApp() *cli.App {
 					EnvVar:   gitApiTokenEnv,
 					Required: true,
 				},
+				cli.StringFlag{
+					Name:   githubOrgFlag,
+					Usage:  "GitHub organization",
+					EnvVar: githubOrgEnv,
+					Value:  githubOrgDefault,
+				},
+				cli.StringFlag{
+					Name:   githubRepoFlag,
+					Usage:  "GitHub repository",
+					EnvVar: githubRepoEnv,
+					Value:  githubRepoDefault,
+				},
 			},
 			Action: generateChangelog,
 		},
@@ -114,6 +144,8 @@ func addLabels(c *cli.Context) error {
 	gitDir := c.String(gitDirFlag)
 	from := c.String(fromFlag)
 	target := c.String(targetFlag)
+	githubOrg := c.String(githubOrgFlag)
+	githubRepo := c.String(githubRepoFlag)
 	label := c.String(labelFlag)
 
 	log.Println("Fetching git history in dir", gitDir, "for", from, "..", target)
@@ -130,7 +162,7 @@ func addLabels(c *cli.Context) error {
 	bar := progress.NewProgressBar(issueCount)
 
 	for _, id := range issueIds {
-		client.AddLabel(id, label)
+		client.AddLabel(githubOrg, githubRepo, id, label)
 		bar.Increase()
 	}
 
@@ -139,11 +171,14 @@ func addLabels(c *cli.Context) error {
 
 func generateChangelog(c *cli.Context) error {
 	token := c.String(gitApiTokenFlag)
+	githubOrg := c.String(githubOrgFlag)
+	githubRepo := c.String(githubRepoFlag)
 	label := c.String(labelFlag)
+
 	client := github.NewClient(token)
 
 	log.Println("Fetching issues for GitHub label", label)
-	features, fixes, docs, pullRequests := client.FetchIssues(label)
+	features, fixes, docs, pullRequests := client.FetchIssues(githubOrg, githubRepo, label)
 
 	log.Println("Generating change log for GitHub label", label)
 	fmt.Println("#", label)
