@@ -11,6 +11,7 @@ func TestGitHistory(t *testing.T) {
 		size  int
 	}{
 		"First commit": {path: ".", start: "7b86247", end: "7ab8381", size: 177},
+		"Between tags": {path: ".", start: "0.1.0", end: "0.2.0", size: 207},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
