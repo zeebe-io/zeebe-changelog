@@ -1,0 +1,155 @@
+package main
+
+import (
+	"fmt"
+	"github.com/urfave/cli"
+	"github.com/zeebe-io/zeebe-changelog/pkg/github"
+	"github.com/zeebe-io/zeebe-changelog/pkg/gitlog"
+	"github.com/zeebe-io/zeebe-changelog/pkg/progress"
+	"log"
+	"os"
+)
+
+const (
+	appName         = "zcl"
+	gitApiTokenFlag = "token"
+	gitApiTokenEnv  = "GITHUB_API_TOKEN"
+	gitDirFlag      = "gitDir"
+	gitDirEnv       = "ZCL_GIT_DIR"
+	labelFlag       = "label"
+	labelEnv        = "ZCL_LABEL"
+	fromFlag        = "from"
+	fromEnv         = "ZCL_FROM_REV"
+	targetFlag      = "target"
+	targetEnv       = "ZCL_TARGET_REV"
+)
+
+var (
+	version = "development"
+	commit  = "HEAD"
+)
+
+func main() {
+	app := createApp()
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func createApp() *cli.App {
+	app := cli.NewApp()
+	app.Name = appName
+	app.HelpName = appName
+	app.Usage = "Zeebe Changelog Helper"
+	app.Version = fmt.Sprintf("%s (commit: %s)", version, commit)
+
+	app.Commands = []cli.Command{
+		{
+			Name:      "add-labels",
+			ShortName: "a",
+			Usage:     "Add GitHub labels to issues and PRs",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:     gitDirFlag,
+					Usage:    "Git working directory",
+					EnvVar:   gitDirEnv,
+					Required: false,
+					Value:    ".",
+				},
+				cli.StringFlag{
+					Name:     labelFlag,
+					EnvVar:   labelEnv,
+					Usage:    "GitHub label to attach to issues and PRs",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:     fromFlag,
+					EnvVar:   fromEnv,
+					Usage:    "Git revision to start start processing",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:     targetFlag,
+					EnvVar:   targetEnv,
+					Usage:    "Git revision to stop commit processing",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:     gitApiTokenFlag,
+					Usage:    "GitHub API Token",
+					EnvVar:   gitApiTokenEnv,
+					Required: true,
+				},
+			},
+			Action: addLabels,
+		},
+		{
+			Name:      "generate",
+			ShortName: "g",
+			Usage:     "Generate change log",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:     labelFlag,
+					EnvVar:   labelEnv,
+					Usage:    "GitHub label name to generate changelog from",
+					Required: true,
+				},
+				cli.StringFlag{
+					Name:     gitApiTokenFlag,
+					Usage:    "GitHub API Token",
+					EnvVar:   gitApiTokenEnv,
+					Required: true,
+				},
+			},
+			Action: generateChangelog,
+		},
+	}
+
+	return app
+}
+
+func addLabels(c *cli.Context) error {
+	token := c.String(gitApiTokenFlag)
+	gitDir := c.String(gitDirFlag)
+	from := c.String(fromFlag)
+	target := c.String(targetFlag)
+	label := c.String(labelFlag)
+
+	log.Println("Fetching git history in dir", gitDir, "for", from, "..", target)
+
+	commits := gitlog.GetHistory(gitDir, from, target)
+
+	log.Println("Collection issue ids")
+	issueIds := gitlog.ExtractIssueIds(commits)
+
+	issueCount := len(issueIds)
+	log.Println("Updating", issueCount, "issues")
+
+	client := github.NewClient(token)
+	bar := progress.NewProgressBar(issueCount)
+
+	for _, id := range issueIds {
+		client.AddLabel(id, label)
+		bar.Increase()
+	}
+
+	return nil
+}
+
+func generateChangelog(c *cli.Context) error {
+	token := c.String(gitApiTokenFlag)
+	label := c.String(labelFlag)
+	client := github.NewClient(token)
+
+	log.Println("Fetching issues for GitHub label", label)
+	features, fixes, docs, pullRequests := client.FetchIssues(label)
+
+	log.Println("Generating change log for GitHub label", label)
+	fmt.Println("#", label)
+	github.PrintIssues("Enhancements", features)
+	github.PrintIssues("Fixes", fixes)
+	github.PrintIssues("Documentation", docs)
+	github.PrintIssues("Merged Pull Requests", pullRequests)
+	return nil
+}
