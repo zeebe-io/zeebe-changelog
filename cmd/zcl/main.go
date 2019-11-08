@@ -178,13 +178,10 @@ func generateChangelog(c *cli.Context) error {
 	client := github.NewClient(token)
 
 	log.Println("Fetching issues for GitHub label", label)
-	features, fixes, docs, pullRequests := client.FetchIssues(githubOrg, githubRepo, label)
+	changelog := client.FetchIssues(githubOrg, githubRepo, label)
 
-	log.Println("Generating change log for GitHub label", label)
-	fmt.Println("#", label)
-	github.PrintIssues("Enhancements", features)
-	github.PrintIssues("Fixes", fixes)
-	github.PrintIssues("Documentation", docs)
-	github.PrintIssues("Merged Pull Requests", pullRequests)
+	log.Println("Generating changelog for GitHub label", label)
+	fmt.Println(changelog.String())
+
 	return nil
 }
