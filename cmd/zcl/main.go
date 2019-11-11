@@ -13,7 +13,7 @@ import (
 const (
 	appName           = "zcl"
 	gitApiTokenFlag   = "token"
-	gitApiTokenEnv    = "GITHUB_API_TOKEN"
+	gitApiTokenEnv    = "GITHUB_TOKEN"
 	gitDirFlag        = "gitDir"
 	gitDirEnv         = "ZCL_GIT_DIR"
 	labelFlag         = "label"
