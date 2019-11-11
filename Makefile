@@ -12,6 +12,10 @@ build: fmt
 test: fmt
 	go list -mod=vendor $(TEST) | xargs -t -n4 go test $(TESTARGS) -mod=vendor -timeout=2m -parallel=4
 
+.PHONY: travis
+travis:
+	go test -race -coverprofile=coverage.txt -covermode=atomic -mod=vendor $(TEST)
+
 .PHONY: cover
 cover:
 	go test $(TEST) -coverprofile=coverage.out
