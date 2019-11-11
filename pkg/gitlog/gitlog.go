@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	lineRegex = regexp.MustCompile("(?im)^\\s*(closes|close|related|merge)\\s+.*$")
-	idRegex   = regexp.MustCompile("#(\\d+)")
+	lineRegex = regexp.MustCompile(`(?im)^\s*(closes|close|related|merge)\s+.*$`)
+	idRegex   = regexp.MustCompile(`#(\d+)`)
 )
 
 func GetHistory(path, start, end string) string {
