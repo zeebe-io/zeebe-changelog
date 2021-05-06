@@ -7,6 +7,7 @@ import (
 
 const (
 	brokerSection     = "Broker"
+	gatewaySection    = "Gateway"
 	javaClientSection = "Java Client"
 	goClientSection   = "Go Client"
 	miscSection       = "Misc"
@@ -25,6 +26,10 @@ func NewSection() *Section {
 func (s *Section) AddIssue(issue *Issue) *Section {
 	if issue.HasBrokerLabel() {
 		s.addIssueToSection(brokerSection, issue)
+	}
+
+	if issue.HasGatewayLabel() {
+		s.addIssueToSection(gatewaySection, issue)
 	}
 
 	if issue.HasJavaClientLabel() {
@@ -48,6 +53,10 @@ func (s *Section) addIssueToSection(section string, issue *Issue) {
 
 func (s *Section) GetBrokerIssues() []*Issue {
 	return s.getIssues(brokerSection)
+}
+
+func (s *Section) GetGatewayIssues() []*Issue {
+	return s.getIssues(gatewaySection)
 }
 
 func (s *Section) GetJavaClientIssues() []*Issue {
@@ -74,6 +83,7 @@ func (s *Section) String() string {
 	var b bytes.Buffer
 
 	b.WriteString(sectionToString(brokerSection, s.GetBrokerIssues()))
+	b.WriteString(sectionToString(gatewaySection, s.GetGatewayIssues()))
 	b.WriteString(sectionToString(javaClientSection, s.GetJavaClientIssues()))
 	b.WriteString(sectionToString(goClientSection, s.GetGoClientIssues()))
 	b.WriteString(sectionToString(miscSection, s.GetMiscIssues()))

@@ -7,6 +7,7 @@ import (
 
 const (
 	brokerLabel     = "Scope: broker"
+	gatewayLabel	= "Scope: gateway"
 	javaClientLabel = "Scope: clients/java"
 	goClientLabel   = "Scope: clients/go"
 
@@ -15,7 +16,7 @@ const (
 	docsLabel        = "Type: Docs"
 )
 
-var knownLabels = []string{brokerLabel, javaClientLabel, goClientLabel, enhancementLabel, bugLabel, docsLabel}
+var knownLabels = []string{brokerLabel, gatewayLabel, javaClientLabel, goClientLabel, enhancementLabel, bugLabel, docsLabel}
 
 type Issue struct {
 	title       *string
@@ -50,6 +51,10 @@ func mapLabels(labelList []github.Label) map[string]bool {
 
 func (i *Issue) HasBrokerLabel() bool {
 	return i.hasLabel(brokerLabel)
+}
+
+func (i *Issue) HasGatewayLabel() bool {
+	return i.hasLabel(gatewayLabel)
 }
 
 func (i *Issue) HasJavaClientLabel() bool {

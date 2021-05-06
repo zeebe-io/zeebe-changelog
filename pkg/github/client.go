@@ -57,4 +57,3 @@ func (ghc *Client) FetchIssues(githubOrg, githubRepo, label string) *Changelog {
 
 	return changelog
 }
-

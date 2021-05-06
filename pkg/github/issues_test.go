@@ -38,6 +38,23 @@ func TestIssue_HasBrokerLabel(t *testing.T) {
 	}
 }
 
+func TestIssue_HasGatewayLabel(t *testing.T) {
+	tests := map[string]struct {
+		issue    *Issue
+		hasLabel bool
+	}{
+		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
+		"Different Label": {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: false},
+		"Has Label":       {issue: createIssue("", 0, "", false, gatewayLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, enhancementLabel, gatewayLabel), hasLabel: true},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.hasLabel, tc.issue.HasGatewayLabel())
+		})
+	}
+}
+
 func TestIssue_HasJavaClientLabel(t *testing.T) {
 	tests := map[string]struct {
 		issue    *Issue

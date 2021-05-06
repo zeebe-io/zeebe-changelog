@@ -30,6 +30,29 @@ func TestSection_GetBrokerIssues(t *testing.T) {
 	}
 }
 
+func TestSection_GetGatewayIssues(t *testing.T) {
+	tests := map[string]struct {
+		section *Section
+		size    int
+	}{
+		"No Issues":       {section: NewSection(), size: 0},
+		"Different Issue": {section: NewSection().AddIssue(createIssueWithLabel("unknown")), size: 0},
+		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel(gatewayLabel)), size: 1},
+		"Multiple Issues": {
+			section: NewSection().
+				AddIssue(createIssueWithLabel(gatewayLabel, enhancementLabel)).
+				AddIssue(createIssueWithLabel(bugLabel, gatewayLabel)).
+				AddIssue(createIssueWithLabel(javaClientLabel)),
+			size: 2,
+		},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.size, len(tc.section.GetGatewayIssues()))
+		})
+	}
+}
+
 func TestSection_GetJavaClientIssues(t *testing.T) {
 	tests := map[string]struct {
 		section *Section
