@@ -7,7 +7,7 @@ import (
 
 const (
 	brokerLabel     = "Scope: broker"
-	gatewayLabel	= "Scope: gateway"
+	gatewayLabel    = "Scope: gateway"
 	javaClientLabel = "Scope: clients/java"
 	goClientLabel   = "Scope: clients/go"
 
