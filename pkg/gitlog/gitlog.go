@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	lineRegex = regexp.MustCompile(`(?im)^\s*(closes?|related|relates|merges?|back\s?ports?|)\s+.*$`)
+	lineRegex = regexp.MustCompile(`(?im)^\s*(closes?|related|relates|merges?|back\s?ports?)\s+.*$`)
 	idRegex   = regexp.MustCompile(`#(\d+)`)
 )
 
