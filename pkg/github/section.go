@@ -10,6 +10,7 @@ const (
 	gatewaySection    = "Gateway"
 	javaClientSection = "Java Client"
 	goClientSection   = "Go Client"
+	zbctlSection      = "zbctl"
 	miscSection       = "Misc"
 )
 
@@ -24,24 +25,33 @@ func NewSection() *Section {
 }
 
 func (s *Section) AddIssue(issue *Issue) *Section {
+	hasSection := false
 	if issue.HasBrokerLabel() {
 		s.addIssueToSection(brokerSection, issue)
+		hasSection = true
 	}
 
 	if issue.HasGatewayLabel() {
 		s.addIssueToSection(gatewaySection, issue)
+		hasSection = true
 	}
 
 	if issue.HasJavaClientLabel() {
 		s.addIssueToSection(javaClientSection, issue)
+		hasSection = true
 	}
 
 	if issue.HasGoClientLabel() {
 		s.addIssueToSection(goClientSection, issue)
+		hasSection = true
 	}
 
-	isMisc := !(issue.HasBrokerLabel() || issue.HasJavaClientLabel() || issue.HasGoClientLabel())
-	if isMisc {
+	if issue.HasZbctlLabel() {
+		s.addIssueToSection(zbctlSection, issue)
+		hasSection = true
+	}
+
+	if !hasSection {
 		s.addIssueToSection(miscSection, issue)
 	}
 	return s
@@ -67,6 +77,10 @@ func (s *Section) GetGoClientIssues() []*Issue {
 	return s.getIssues(goClientSection)
 }
 
+func (s *Section) GetZbctlIssues() []*Issue {
+	return s.getIssues(zbctlSection)
+}
+
 func (s *Section) GetMiscIssues() []*Issue {
 	return s.getIssues(miscSection)
 }
@@ -86,6 +100,7 @@ func (s *Section) String() string {
 	b.WriteString(sectionToString(gatewaySection, s.GetGatewayIssues()))
 	b.WriteString(sectionToString(javaClientSection, s.GetJavaClientIssues()))
 	b.WriteString(sectionToString(goClientSection, s.GetGoClientIssues()))
+	b.WriteString(sectionToString(zbctlSection, s.GetZbctlIssues()))
 	b.WriteString(sectionToString(miscSection, s.GetMiscIssues()))
 
 	return b.String()

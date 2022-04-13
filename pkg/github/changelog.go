@@ -10,6 +10,7 @@ type Changelog struct {
 	enhancements *Section
 	fixes        *Section
 	docs         []*Issue
+	toil         []*Issue
 	pullRequests []*Issue
 }
 
@@ -19,6 +20,7 @@ func NewChangelog(title string) *Changelog {
 		enhancements: NewSection(),
 		fixes:        NewSection(),
 		docs:         []*Issue{},
+		toil:         []*Issue{},
 		pullRequests: []*Issue{},
 	}
 }
@@ -36,6 +38,9 @@ func (c *Changelog) AddIssue(issue *Issue) *Changelog {
 		if issue.HasDocsLabel() {
 			c.docs = append(c.docs, issue)
 		}
+		if issue.HasToilLabel() {
+			c.toil = append(c.toil, issue)
+		}
 	}
 	return c
 }
@@ -48,6 +53,7 @@ func (c *Changelog) String() string {
 	chapterToString(&b, "Enhancements", c.enhancements)
 	chapterToString(&b, "Bug Fixes", c.fixes)
 
+	issueListToString(&b, "Maintenance", c.toil)
 	issueListToString(&b, "Documentation", c.docs)
 	issueListToString(&b, "Merged Pull Requests", c.pullRequests)
 

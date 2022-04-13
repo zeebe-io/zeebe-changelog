@@ -6,17 +6,28 @@ import (
 )
 
 const (
-	brokerLabel     = "Scope: broker"
-	gatewayLabel    = "Scope: gateway"
-	javaClientLabel = "Scope: clients/java"
-	goClientLabel   = "Scope: clients/go"
-
-	enhancementLabel = "Type: Enhancement"
-	bugLabel         = "Type: Bug"
-	docsLabel        = "Type: Docs"
+	brokerLabel     = "scope/broker"
+	gatewayLabel    = "scope/gateway"
+	javaClientLabel = "scope/clients-java"
+	goClientLabel   = "scope/clients-go"
+	zbctlLabel      = "scope/zbctl"
+	featureLabel    = "kind/feature"
+	bugLabel        = "kind/bug"
+	docsLabel       = "kind/documentation"
+	toilLabel       = "kind/toil"
 )
 
-var knownLabels = []string{brokerLabel, gatewayLabel, javaClientLabel, goClientLabel, enhancementLabel, bugLabel, docsLabel}
+var knownLabels = []string{
+	brokerLabel,
+	gatewayLabel,
+	javaClientLabel,
+	goClientLabel,
+	featureLabel,
+	bugLabel,
+	docsLabel,
+	zbctlLabel,
+	toilLabel,
+}
 
 type Issue struct {
 	title       *string
@@ -66,7 +77,7 @@ func (i *Issue) HasGoClientLabel() bool {
 }
 
 func (i *Issue) HasEnhancementLabel() bool {
-	return i.hasLabel(enhancementLabel)
+	return i.hasLabel(featureLabel)
 }
 
 func (i *Issue) HasBugLabel() bool {
@@ -75,6 +86,14 @@ func (i *Issue) HasBugLabel() bool {
 
 func (i *Issue) HasDocsLabel() bool {
 	return i.hasLabel(docsLabel)
+}
+
+func (i *Issue) HasZbctlLabel() bool {
+	return i.hasLabel(zbctlLabel)
+}
+
+func (i *Issue) HasToilLabel() bool {
+	return i.hasLabel(toilLabel)
 }
 
 func (i *Issue) hasLabel(label string) bool {
