@@ -29,7 +29,7 @@ func TestIssue_HasBrokerLabel(t *testing.T) {
 		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
 		"Different Label": {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: false},
 		"Has Label":       {issue: createIssue("", 0, "", false, brokerLabel), hasLabel: true},
-		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, enhancementLabel, brokerLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, featureLabel, brokerLabel), hasLabel: true},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -46,7 +46,7 @@ func TestIssue_HasGatewayLabel(t *testing.T) {
 		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
 		"Different Label": {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: false},
 		"Has Label":       {issue: createIssue("", 0, "", false, gatewayLabel), hasLabel: true},
-		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, enhancementLabel, gatewayLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, featureLabel, gatewayLabel), hasLabel: true},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -63,7 +63,7 @@ func TestIssue_HasJavaClientLabel(t *testing.T) {
 		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
 		"Different Label": {issue: createIssue("", 0, "", false, brokerLabel), hasLabel: false},
 		"Has Label":       {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: true},
-		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, enhancementLabel, brokerLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, featureLabel, brokerLabel), hasLabel: true},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -80,7 +80,7 @@ func TestIssue_HasGoClientLabel(t *testing.T) {
 		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
 		"Different Label": {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: false},
 		"Has Label":       {issue: createIssue("", 0, "", false, goClientLabel), hasLabel: true},
-		"Multiple Labels": {issue: createIssue("", 0, "", false, goClientLabel, enhancementLabel, brokerLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, goClientLabel, featureLabel, brokerLabel), hasLabel: true},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -96,8 +96,8 @@ func TestIssue_HasEnhancementLabel(t *testing.T) {
 	}{
 		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
 		"Different Label": {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: false},
-		"Has Label":       {issue: createIssue("", 0, "", false, enhancementLabel), hasLabel: true},
-		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, enhancementLabel, brokerLabel), hasLabel: true},
+		"Has Label":       {issue: createIssue("", 0, "", false, featureLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, featureLabel, brokerLabel), hasLabel: true},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -136,6 +136,23 @@ func TestIssue_HasDocsLabel(t *testing.T) {
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
 			assert.Equal(t, tc.hasLabel, tc.issue.HasDocsLabel())
+		})
+	}
+}
+
+func TestIssue_HasToilLabel(t *testing.T) {
+	tests := map[string]struct {
+		issue    *Issue
+		hasLabel bool
+	}{
+		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
+		"Different Label": {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: false},
+		"Has Label":       {issue: createIssue("", 0, "", false, toilLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, javaClientLabel, brokerLabel, toilLabel), hasLabel: true},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.hasLabel, tc.issue.HasToilLabel())
 		})
 	}
 }

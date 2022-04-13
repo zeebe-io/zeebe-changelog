@@ -17,7 +17,7 @@ func TestSection_GetBrokerIssues(t *testing.T) {
 		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel(brokerLabel)), size: 1},
 		"Multiple Issues": {
 			section: NewSection().
-				AddIssue(createIssueWithLabel(brokerLabel, enhancementLabel)).
+				AddIssue(createIssueWithLabel(brokerLabel, featureLabel)).
 				AddIssue(createIssueWithLabel(bugLabel, brokerLabel)).
 				AddIssue(createIssueWithLabel(javaClientLabel)),
 			size: 2,
@@ -40,7 +40,7 @@ func TestSection_GetGatewayIssues(t *testing.T) {
 		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel(gatewayLabel)), size: 1},
 		"Multiple Issues": {
 			section: NewSection().
-				AddIssue(createIssueWithLabel(gatewayLabel, enhancementLabel)).
+				AddIssue(createIssueWithLabel(gatewayLabel, featureLabel)).
 				AddIssue(createIssueWithLabel(bugLabel, gatewayLabel)).
 				AddIssue(createIssueWithLabel(javaClientLabel)),
 			size: 2,
@@ -63,7 +63,7 @@ func TestSection_GetJavaClientIssues(t *testing.T) {
 		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel(javaClientLabel)), size: 1},
 		"Multiple Issues": {
 			section: NewSection().
-				AddIssue(createIssueWithLabel(javaClientLabel, enhancementLabel)).
+				AddIssue(createIssueWithLabel(javaClientLabel, featureLabel)).
 				AddIssue(createIssueWithLabel(bugLabel, javaClientLabel)).
 				AddIssue(createIssueWithLabel(brokerLabel)),
 			size: 2,
@@ -86,7 +86,7 @@ func TestSection_GetGoClientIssues(t *testing.T) {
 		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel(goClientLabel)), size: 1},
 		"Multiple Issues": {
 			section: NewSection().
-				AddIssue(createIssueWithLabel(goClientLabel, enhancementLabel)).
+				AddIssue(createIssueWithLabel(goClientLabel, featureLabel)).
 				AddIssue(createIssueWithLabel(bugLabel, goClientLabel)).
 				AddIssue(createIssueWithLabel(brokerLabel)),
 			size: 2,
@@ -109,7 +109,7 @@ func TestSection_GetMiscIssues(t *testing.T) {
 		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel()), size: 1},
 		"Multiple Issues": {
 			section: NewSection().
-				AddIssue(createIssueWithLabel(enhancementLabel)).
+				AddIssue(createIssueWithLabel(featureLabel)).
 				AddIssue(createIssueWithLabel(bugLabel)).
 				AddIssue(createIssueWithLabel(brokerLabel)),
 			size: 2,
