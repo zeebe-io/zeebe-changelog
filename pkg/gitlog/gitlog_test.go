@@ -43,6 +43,8 @@ func TestExtractIssueIds(t *testing.T) {
 		"Duplicate issue ids":           {message: "closes #123, #234, #123 and #23", issueIds: []int{123, 234, 23}},
 		"Multiple lines":                {message: "foo bar\n\ncloses #1234\ntest", issueIds: []int{1234}},
 		"Multiple IDs without keywords": {message: "foo\n\nbar #234\n\nmerges #1", issueIds: []int{1}},
+		"ID with text after":            {message: "closes #4002 drop multi column families usage", issueIds: []int{4002}},
+		"Multiple ID with text after":   {message: "closes #5137 low load causes defragmentation\ncloses #4560 unstable cluster on bigger state", issueIds: []int{5137, 4560}},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
