@@ -25,7 +25,7 @@ fi
 version=$1
 
 
-if [[ "$version" =~ ^8\.[2-9]+\.[1-9]+$ ]]
+if [[ "$version" =~ ^8\.[1-9][0-9]*\.[1-9][0-9]*$ ]]
 then
   # PATCH VERSION
   #
@@ -46,8 +46,8 @@ then
 
   # To find the previous patch version we extract the patch version
   # and subsctract by one
-  patchVersion=$(echo $version | sed 's/8\.[2-9]\+\.//')
-  majorMinor=$(echo $version | sed 's/\.[1-9]\+$//')
+  patchVersion=$(echo $version | sed 's/8\.[1-9][0-9]\*\.//')
+  majorMinor=$(echo $version | sed 's/\.[1-9][0-9]\*$//')
   export ZCL_FROM_REV="$majorMinor".$(( patchVersion - 1 ))
   export ZCL_TARGET_REV="$version"
 
