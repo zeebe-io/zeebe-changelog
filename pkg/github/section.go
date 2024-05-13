@@ -11,6 +11,8 @@ const (
 	javaClientSection = "Java Client"
 	goClientSection   = "Go Client"
 	zbctlSection      = "zbctl"
+	operateSection    = "Operate"
+	tasklistSection   = "Tasklist"
 	miscSection       = "Misc"
 )
 
@@ -51,6 +53,16 @@ func (s *Section) AddIssue(issue *Issue) *Section {
 		hasSection = true
 	}
 
+	if issue.HasOperateLabel() {
+		s.addIssueToSection(operateSection, issue)
+		hasSection = true
+	}
+
+	if issue.HasTasklistLabel() {
+		s.addIssueToSection(tasklistSection, issue)
+		hasSection = true
+	}
+
 	if !hasSection {
 		s.addIssueToSection(miscSection, issue)
 	}
@@ -81,6 +93,14 @@ func (s *Section) GetZbctlIssues() []*Issue {
 	return s.getIssues(zbctlSection)
 }
 
+func (s *Section) GetOperateIssues() []*Issue {
+	return s.getIssues(operateSection)
+}
+
+func (s *Section) GetTasklistIssues() []*Issue {
+	return s.getIssues(tasklistSection)
+}
+
 func (s *Section) GetMiscIssues() []*Issue {
 	return s.getIssues(miscSection)
 }
@@ -101,6 +121,8 @@ func (s *Section) String() string {
 	b.WriteString(sectionToString(javaClientSection, s.GetJavaClientIssues()))
 	b.WriteString(sectionToString(goClientSection, s.GetGoClientIssues()))
 	b.WriteString(sectionToString(zbctlSection, s.GetZbctlIssues()))
+	b.WriteString(sectionToString(operateSection, s.GetOperateIssues()))
+	b.WriteString(sectionToString(tasklistSection, s.GetTasklistIssues()))
 	b.WriteString(sectionToString(miscSection, s.GetMiscIssues()))
 
 	return b.String()
