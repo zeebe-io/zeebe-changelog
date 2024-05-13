@@ -17,7 +17,7 @@ func GetHistory(path, start, end string) string {
 	logRange := fmt.Sprintf("%s..%s", start, end)
 
 	// use git command til git lib implements range feature, see https://github.com/src-d/go-git/issues/1166
-	command := exec.Command("git", "-C", path, "log", logRange, "--")
+	command := exec.Command("git", "-C", path, "log", logRange, "--merges", "--")
 	log.Println(command)
 	out, err := command.CombinedOutput()
 	result := string(out)
