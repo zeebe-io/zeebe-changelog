@@ -1,20 +1,34 @@
 package gitlog
 
-import "testing"
+import (
+	"log"
+	"os/exec"
+	"testing"
+)
 import "github.com/stretchr/testify/assert"
 
 func TestGitHistory(t *testing.T) {
+
+	// clone zeebe repo to test with merge commits
+	command := exec.Command("git", "clone", "https://github.com/camunda/zeebe.git", "zeebe")
+	log.Println(command)
+
+	out, _ := command.CombinedOutput()
+	log.Println(out)
+
+	// use git command til git lib implements range feature, see https://github.com/src-d/go-git/issues/1166
 	tests := map[string]struct {
 		path  string
 		start string
 		end   string
 		size  int
 	}{
-		"First commit": {path: ".", start: "7b86247", end: "7ab8381", size: 177},
-		"Between tags": {path: ".", start: "0.1.0", end: "0.2.0", size: 207},
+		"First commit in zcl":        {path: ".", start: "7b86247", end: "7ab8381", size: 0},
+		"Between tags in zeebe repo": {path: "zeebe", start: "8.5.0", end: "8.6.0-alpha1", size: 2010863},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
+
 			log := GetHistory(tc.path, tc.start, tc.end)
 			assert.Equal(t, tc.size, len(log))
 		})
