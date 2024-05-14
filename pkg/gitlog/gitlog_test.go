@@ -10,7 +10,7 @@ import "github.com/stretchr/testify/assert"
 func TestGitHistory(t *testing.T) {
 
 	// clone zeebe repo to test with merge commits
-	command := exec.Command("git", "clone", "https://github.com/camunda/zeebe.git", "zeebe")
+	command := exec.Command("git", "clone", "-b", "8.5.0", "https://github.com/camunda/zeebe.git", "zeebe")
 	log.Println(command)
 
 	out, _ := command.CombinedOutput()
@@ -24,7 +24,7 @@ func TestGitHistory(t *testing.T) {
 		size  int
 	}{
 		"First commit in zcl":        {path: ".", start: "7b86247", end: "7ab8381", size: 0},
-		"Between tags in zeebe repo": {path: "zeebe", start: "8.5.0", end: "8.6.0-alpha1", size: 2010863},
+		"Between tags in zeebe repo": {path: "zeebe", start: "8.5.0", end: "8.6.0-alpha1", size: 1558638},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
