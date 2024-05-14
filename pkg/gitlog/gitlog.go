@@ -16,10 +16,19 @@ var (
 func GetHistory(path, start, end string) string {
 	logRange := fmt.Sprintf("%s..%s", start, end)
 
+	// get date from start (to handle cases where we merged git histories)
+	getStartDateCmd := exec.Command("git", "-C", path, "log", "-1", "--format=%ai", start)
+	log.Println(getStartDateCmd)
+	out, err := getStartDateCmd.CombinedOutput()
+	startDate := string(out)
+	if err != nil {
+		log.Fatal(startDate, err)
+	}
+
 	// use git command til git lib implements range feature, see https://github.com/src-d/go-git/issues/1166
-	command := exec.Command("git", "-C", path, "log", logRange, "--merges", "--")
+	command := exec.Command("git", "-C", path, "log", logRange, "--merges", "--since", startDate, "--")
 	log.Println(command)
-	out, err := command.CombinedOutput()
+	out, err = command.CombinedOutput()
 	result := string(out)
 
 	if err != nil {
