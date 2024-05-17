@@ -28,3 +28,15 @@ Generate changelog for [Zeebe](github.com/zeebe-io/zeebe) project.
      --label="version:$ZCL_TARGET_REV" \
      --org camunda --repo zeebe
 ```
+## Release ZCL
+
+* [Prerequisite] Install [goreleaser](https://goreleaser.com/intro/#usage)
+  * We have experienced issues with the recent versions (likely the project is not compatible with the recent versions)
+  * To overcome this we used (in the last releases): `go install github.com/goreleaser/goreleaser@v1.0.0`
+* Create a new tag with the latest changes:
+  * Create tag local: `git tag <version>`
+  * Push tag: `git push origin <tag>`
+* Release ZCL
+  * Run goreleaser: `$GOPATH/bin/goreleaser release`
+  * Verify on [release page](https://github.com/zeebe-io/zeebe-changelog/releases)
+
