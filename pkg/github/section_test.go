@@ -99,6 +99,52 @@ func TestSection_GetGoClientIssues(t *testing.T) {
 	}
 }
 
+func TestSection_GetOperateIssues(t *testing.T) {
+	tests := map[string]struct {
+		section *Section
+		size    int
+	}{
+		"No Issues":       {section: NewSection(), size: 0},
+		"Different Issue": {section: NewSection().AddIssue(createIssueWithLabel("unknown")), size: 0},
+		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel(operateLabel)), size: 1},
+		"Multiple Issues": {
+			section: NewSection().
+				AddIssue(createIssueWithLabel(operateLabel, featureLabel)).
+				AddIssue(createIssueWithLabel(bugLabel, operateLabel)).
+				AddIssue(createIssueWithLabel(brokerLabel)),
+			size: 2,
+		},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.size, len(tc.section.GetOperateIssues()))
+		})
+	}
+}
+
+func TestSection_GetTasklistIssues(t *testing.T) {
+	tests := map[string]struct {
+		section *Section
+		size    int
+	}{
+		"No Issues":       {section: NewSection(), size: 0},
+		"Different Issue": {section: NewSection().AddIssue(createIssueWithLabel("unknown")), size: 0},
+		"One Issue":       {section: NewSection().AddIssue(createIssueWithLabel(tasklistLabel)), size: 1},
+		"Multiple Issues": {
+			section: NewSection().
+				AddIssue(createIssueWithLabel(tasklistLabel, featureLabel)).
+				AddIssue(createIssueWithLabel(bugLabel, tasklistLabel)).
+				AddIssue(createIssueWithLabel(brokerLabel)),
+			size: 2,
+		},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.size, len(tc.section.GetTasklistIssues()))
+		})
+	}
+}
+
 func TestSection_GetMiscIssues(t *testing.T) {
 	tests := map[string]struct {
 		section *Section

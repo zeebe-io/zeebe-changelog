@@ -157,6 +157,40 @@ func TestIssue_HasToilLabel(t *testing.T) {
 	}
 }
 
+func TestIssue_HasOperateLabel(t *testing.T) {
+	tests := map[string]struct {
+		issue    *Issue
+		hasLabel bool
+	}{
+		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
+		"Different Label": {issue: createIssue("", 0, "", false, javaClientLabel), hasLabel: false},
+		"Has Label":       {issue: createIssue("", 0, "", false, operateLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, operateLabel, featureLabel, tasklistLabel), hasLabel: true},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.hasLabel, tc.issue.HasOperateLabel())
+		})
+	}
+}
+
+func TestIssue_HasTasklistLabel(t *testing.T) {
+	tests := map[string]struct {
+		issue    *Issue
+		hasLabel bool
+	}{
+		"No Label":        {issue: createIssue("", 0, "", false), hasLabel: false},
+		"Different Label": {issue: createIssue("", 0, "", false, operateLabel), hasLabel: false},
+		"Has Label":       {issue: createIssue("", 0, "", false, tasklistLabel), hasLabel: true},
+		"Multiple Labels": {issue: createIssue("", 0, "", false, tasklistLabel, featureLabel, brokerLabel), hasLabel: true},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			assert.Equal(t, tc.hasLabel, tc.issue.HasTasklistLabel())
+		})
+	}
+}
+
 func TestIssue_String(t *testing.T) {
 	issue := createIssue("Test Issue", 1234, "https://github.com", false)
 	assert.Equal(t, "Test Issue ([#1234](https://github.com))", issue.String())
